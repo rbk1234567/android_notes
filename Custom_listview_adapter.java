@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.rbk.notatnik.R;
 
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,8 +20,11 @@ import java.util.Locale;
  */
 
 public class Custom_listview_adapter extends ArrayAdapter {
+
+
     public Custom_listview_adapter(@NonNull Context context, int resource, @NonNull List objects) {
         super(context, resource, objects);
+
     }
 
     @Override
@@ -40,9 +44,9 @@ public class Custom_listview_adapter extends ArrayAdapter {
             TextView TvNote = (TextView) view.findViewById(R.id.list_row_note);
 
             if (TvDate != null) {
-                TvDate.setText(entry.getDate());
+                TvDate.setText(MainActivity.getDisplayDate(MainActivity.getDate_pattern()+MainActivity.getDayofweek_pattern(),MainActivity.getCalendarFromFile(entry.getDate())));
 
-                view = getColoredView(entry.getDate(),view);
+                view = getColoredView(TvDate.getText().toString(),view);
             }
 
             if (TvNote != null) {
@@ -53,6 +57,11 @@ public class Custom_listview_adapter extends ArrayAdapter {
         }
 
         return view;
+    }
+
+    private void nothing()
+    {
+
     }
 
     private Boolean isSunday(String entrydate)
@@ -73,7 +82,7 @@ public class Custom_listview_adapter extends ArrayAdapter {
     private Boolean isToday(String entrydate)
     {
         Boolean result = Boolean.FALSE;
-        if (entrydate.contains(MainActivity.getFormattedDate(MainActivity.getDate_pattern(),MainActivity.getCurrent_date())))
+        if (entrydate.contains(MainActivity.getDisplayDate(MainActivity.getDate_pattern(),MainActivity.getCurrent_date())))
         {
             result = Boolean.TRUE;
         }
