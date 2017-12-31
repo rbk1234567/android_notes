@@ -2,6 +2,7 @@ package com.example.rbk.notatnik.git;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.rbk.notatnik.MainActivity;
 import com.example.rbk.notatnik.R;
 
+import java.text.DateFormatSymbols;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by rbk on 31.12.17.
@@ -40,6 +45,9 @@ public class Custom_listview_adapter extends ArrayAdapter {
 
             if (TvDate != null) {
                 TvDate.setText(entry.getDate());
+
+                view = setViewSundayColor(entry.getDate(),view, MainActivity.getSundaycolor());
+
             }
 
             if (TvNote != null) {
@@ -48,6 +56,22 @@ public class Custom_listview_adapter extends ArrayAdapter {
 
         }
 
+        return view;
+    }
+
+    private View setViewSundayColor(String entrydate,View view,int color)
+    {
+        DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
+        String sundayname = symbols.getShortWeekdays()[1];
+
+        if(entrydate.contains(sundayname))
+        {
+            view.setBackgroundColor(color);
+        }
+        else
+        {
+            view.setBackgroundColor(Color.BLACK);
+        }
         return view;
     }
 
