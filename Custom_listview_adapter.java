@@ -1,8 +1,6 @@
 package com.example.rbk.notatnik.git;
 
-import android.content.ClipData;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.rbk.notatnik.MainActivity;
 import com.example.rbk.notatnik.R;
 
 import java.text.DateFormatSymbols;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,12 +42,12 @@ public class Custom_listview_adapter extends ArrayAdapter {
             if (TvDate != null) {
                 TvDate.setText(entry.getDate());
 
-                view = setViewSundayColor(entry.getDate(),view, MainActivity.getSundaycolor());
-
+                view = getColoredView(entry.getDate(),view);
             }
 
             if (TvNote != null) {
                 TvNote.setText(entry.getNote());
+
             }
 
         }
@@ -59,20 +55,52 @@ public class Custom_listview_adapter extends ArrayAdapter {
         return view;
     }
 
-    private View setViewSundayColor(String entrydate,View view,int color)
+    private Boolean isSunday(String entrydate)
     {
+        Boolean result = Boolean.FALSE;
+
         DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
         String sundayname = symbols.getShortWeekdays()[1];
+        String fullsundayname = symbols.getWeekdays()[1];
 
-        if(entrydate.contains(sundayname))
+        if(entrydate.contains(sundayname)||entrydate.contains(fullsundayname))
         {
-            view.setBackgroundColor(color);
+            result = Boolean.TRUE;
         }
-        else
+        return result;
+    }
+
+    private Boolean isToday(String entrydate)
+    {
+        Boolean result = Boolean.FALSE;
+        if (entrydate.contains(MainActivity.getFormattedDate(MainActivity.getDate_pattern(),MainActivity.getCurrent_date())))
         {
-            view.setBackgroundColor(Color.BLACK);
+            result = Boolean.TRUE;
         }
+        return result;
+    }
+
+    private View getColoredView(String entrydate,View view)
+    {
+        int everydaycolor = MainActivity.getEverydaycolor();
+        int sundaycolor = MainActivity.getSundaycolor();
+        int todaycolor = MainActivity.getTodayColor();
+
+
+        view.setBackgroundColor(everydaycolor);
+
+        if (isSunday(entrydate)==Boolean.TRUE)
+        {
+            view.setBackgroundColor(sundaycolor);
+        }
+
+        if(isToday(entrydate)==Boolean.TRUE)
+        {
+            view.setBackgroundColor(todaycolor);
+        }
+
         return view;
+
     }
 
 
