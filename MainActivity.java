@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private static int sundaycolor = Color.RED;
     private static int todaycolor = Color.BLUE;
     private static int everydaycolor = Color.BLACK;
-    private static ArrayList<List_entry> database;
+    private static ArrayList<List_entry> database = new ArrayList<>();
     private static ArrayList<List_entry> list_values = new ArrayList<List_entry>();
     private static Custom_listview_adapter adapter;
 
@@ -90,6 +90,13 @@ public class MainActivity extends AppCompatActivity {
                 int position = i;
 
                 list_values.get(i).setNote("clicked");
+
+
+
+                MainActivity.database.add(new List_entry(MainActivity.list_values.get(i).getDate(), MainActivity.list_values.get(i).getNote()));
+                DataLoader loader = new DataLoader();
+                loader.saveDatabase(database);
+
 
                 adapter.notifyDataSetChanged();
             }

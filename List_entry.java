@@ -1,14 +1,18 @@
 package com.example.rbk.notatnik.git;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by rbk on 31.12.17.
  */
 
 public class List_entry {
 
-    String date;
-    String note;
+    @JsonProperty("date")String date;
+    @JsonProperty("note") String note;
 
+    @JsonCreator
     public List_entry(String date,String note)
     {
         this.date = date;
