@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private static int sundaycolor = Color.RED;
     private static int todaycolor = Color.BLUE;
     private static int everydaycolor = Color.BLACK;
+    private static int year_set = 2018;
     private static ArrayList<List_entry> database = new ArrayList<List_entry>();
     private static ArrayList<List_entry> list_values = new ArrayList<List_entry>();
     private static Custom_listview_adapter adapter;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         context = this.getApplicationContext();
         current_date = Calendar.getInstance();
         selected_year = Calendar.getInstance();
-        selected_year.set(2017,0,1);
+        selected_year.set(year_set,0,1);
 
         bt_today = (Button) findViewById(R.id.bt_today);
         bt_settings = (ImageButton) findViewById(R.id.bt_settings);
@@ -108,6 +109,17 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        bt_settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DataLoader loader = new DataLoader();
+                SettingsSet set = new SettingsSet(sundaycolor,todaycolor,everydaycolor,date_pattern,dayofweek_pattern,year_set);
+                System.out.println(set.toString());
+                loader.saveSettings(set);
+
+            }
+        });
     }
 
     public static void addEntryToDatabase(List_entry entry)
@@ -142,13 +154,13 @@ public class MainActivity extends AppCompatActivity {
         return date_formatter.format(date.getTime());
     }
 
-    public void initialize_list(Calendar selected_year)
+    public static void initialize_list(Calendar selected_year)
     {
 
         for (int m = 0;m<12;m++) {
             for (int d = 0;d<selected_year.getActualMaximum(Calendar.DAY_OF_MONTH);d++)
             {
-                list_values.add(new List_entry(this.getFileFormatEntryDate(selected_year),"notatka"));
+                list_values.add(new List_entry(MainActivity.getFileFormatEntryDate(selected_year),"notatka"));
                 selected_year.roll(Calendar.DAY_OF_MONTH,1);
             }
 
@@ -223,5 +235,15 @@ public class MainActivity extends AppCompatActivity {
 
     public static int getEverydaycolor() {
         return everydaycolor;
+    }
+
+    public static void LoadSetting(SettingsSet set)
+    {
+        sundaycolor = set.getSundaycolor();
+        todaycolor = set.getTodaycolor();
+        everydaycolor = set.getEverydaycolor();
+        date_pattern = set.getDate_pattern();
+        dayofweek_pattern = set.getDayofweek_pattern();
+        initialize_list(selected_year);
     }
 }

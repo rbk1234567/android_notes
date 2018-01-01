@@ -2,7 +2,10 @@ package com.example.rbk.notatnik.git;
 
 import android.graphics.Color;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Calendar;
 
 /**
  * Created by rbk on 01.01.18.
@@ -14,15 +17,36 @@ public class SettingsSet {
     @JsonProperty("eve_col")private int everydaycolor = Color.BLACK;
     @JsonProperty("date_patt")private String date_pattern = "dd/MM/yyyy";
     @JsonProperty("day_patt")private String dayofweek_pattern = " EEEE";
+    @JsonProperty("sel_year")int selected_year = Calendar.getInstance().get(Calendar.YEAR);
 
 
-    public SettingsSet(int sundaycolor,int todaycolor, int everydaycolor, String date_pattern, String dayofweek_pattern)
+    public SettingsSet()
+    {
+
+    }
+
+    @JsonCreator
+    public SettingsSet(@JsonProperty("sun_col")int sundaycolor,
+                       @JsonProperty("tod_col")int todaycolor,
+                       @JsonProperty("eve_col")int everydaycolor,
+                       @JsonProperty("date_patt")String date_pattern,
+                       @JsonProperty("day_patt")String dayofweek_pattern,
+                       @JsonProperty("sel_year")int selected_year)
     {
         this.sundaycolor = sundaycolor;
         this.todaycolor = todaycolor;
         this.everydaycolor = everydaycolor;
         this.date_pattern = date_pattern;
         this.dayofweek_pattern = dayofweek_pattern;
+        this.selected_year = selected_year;
+    }
+
+    public int getSelected_year() {
+        return selected_year;
+    }
+
+    public void setSelected_year(int selected_year) {
+        this.selected_year = selected_year;
     }
 
     public int getSundaycolor() {

@@ -18,8 +18,10 @@ import java.util.List;
 
 public class DataLoader {
     private final String filename = "/note_database.json";
+    private final String settingsfilename = "/note_settings.json";
     String root = Environment.getExternalStorageDirectory().toString();
     String savepath = root+filename;
+    String settingssavepath = root+settingsfilename;
 
     public ArrayList<List_entry> getDatabase()
     {
@@ -37,7 +39,7 @@ public class DataLoader {
     public void saveDatabase(ArrayList<List_entry> data)
     {
 
-        System.out.println(root);
+
         File file = new File(savepath);
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -46,5 +48,31 @@ public class DataLoader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void saveSettings(SettingsSet set)
+    {
+
+        File file = new File(settingssavepath);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        try {
+            mapper.writerWithDefaultPrettyPrinter().writeValue(file,set);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public SettingsSet getSettings()
+    {
+        File file = new File(settingssavepath);
+        SettingsSet loadeddata = new SettingsSet();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            loadeddata = mapper.readValue(new FileReader(settingssavepath), SettingsSet.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return loadeddata;
     }
 }
