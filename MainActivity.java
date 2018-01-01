@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private static int sundaycolor = Color.RED;
     private static int todaycolor = Color.BLUE;
     private static int everydaycolor = Color.BLACK;
-    private static ArrayList<List_entry> database = new ArrayList<>();
+    private static ArrayList<List_entry> database = new ArrayList<List_entry>();
     private static ArrayList<List_entry> list_values = new ArrayList<List_entry>();
     private static Custom_listview_adapter adapter;
 
@@ -54,9 +54,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart(){
     super.onStart();
     current_date.set(2017,2,3);
+    loadDatabase();
     initialize_list(selected_year);
     initialize_buttons();
 
+    }
+
+    private static void loadDatabase() {
+        DataLoader loader = new DataLoader();
+        database = loader.getDatabase();
     }
 
     private void initialize_buttons() {
@@ -91,18 +97,41 @@ public class MainActivity extends AppCompatActivity {
 
                 list_values.get(i).setNote("clicked");
 
-
-
-                MainActivity.database.add(new List_entry(MainActivity.list_values.get(i).getDate(), MainActivity.list_values.get(i).getNote()));
+                MainActivity.addEntryToDatabase(new List_entry(MainActivity.list_values.get(i).getDate(), MainActivity.list_values.get(i).getNote()));
                 DataLoader loader = new DataLoader();
                 loader.saveDatabase(database);
 
-
                 adapter.notifyDataSetChanged();
+
             }
 
 
         });
+
+    }
+
+    public static void addEntryToDatabase(List_entry entry)
+    {
+        Boolean alreadyexist = Boolean.FALSE;
+       if(database.isEmpty()==Boolean.FALSE)
+        {
+            for (List_entry e : database) {
+                if (e.getDate().matches(entry.getDate())) {
+                    e.setNote(entry.getNote());
+                    alreadyexist = Boolean.TRUE;
+                    break;
+                }
+            }
+            if(alreadyexist == Boolean.FALSE)
+            {
+                database.add(entry);
+            }
+
+        }
+        else
+       {
+           database.add(entry);
+       }
 
     }
 
@@ -112,11 +141,9 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat date_formatter = new SimpleDateFormat(pattern);
         return date_formatter.format(date.getTime());
     }
+
     public void initialize_list(Calendar selected_year)
     {
-
-
-
 
         for (int m = 0;m<12;m++) {
             for (int d = 0;d<selected_year.getActualMaximum(Calendar.DAY_OF_MONTH);d++)
@@ -128,7 +155,18 @@ public class MainActivity extends AppCompatActivity {
             selected_year.roll(Calendar.MONTH,1);
         }
 
+        if(database.isEmpty()==Boolean.FALSE) {
+            for (int i = 0; i < list_values.size(); i++) {
+                for (List_entry e : database) {
+                    String ival = list_values.get(i).getDate();
+                    String eval = e.getDate();
+                    if (ival.matches(eval)) {
+                        list_values.get(i).setNote(e.getNote());
+                    }
+                }
 
+            }
+        }
 
         adapter = new Custom_listview_adapter(context,android.R.layout.simple_list_item_1,list_values);
 

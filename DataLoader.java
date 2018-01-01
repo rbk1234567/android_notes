@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,25 +18,27 @@ import java.util.List;
 
 public class DataLoader {
     private final String filename = "/note_database.json";
-    private ArrayList<List_entry> database = null;
+    String root = Environment.getExternalStorageDirectory().toString();
+    String savepath = root+filename;
 
     public ArrayList<List_entry> getDatabase()
     {
-        File file = new File(filename);
+        File file = new File(savepath);
+        ArrayList<List_entry> loadeddata = new ArrayList<List_entry>();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            database = mapper.readValue(filename, TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, List_entry.class));
+            loadeddata = mapper.readValue(new FileReader(savepath), TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, List_entry.class));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return database;
+        return loadeddata;
     }
 
     public void saveDatabase(ArrayList<List_entry> data)
     {
-        String root = Environment.getExternalStorageDirectory().toString();
+
         System.out.println(root);
-        File file = new File(root+filename);
+        File file = new File(savepath);
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         try {
