@@ -1,8 +1,8 @@
 package com.example.rbk.notatnik.git;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
-import android.icu.text.LocaleDisplayNames;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private static Calendar selected_year;
     private static String date_pattern = "dd/MM/yyyy";
     private static String dayofweek_pattern = " EEEE";
-    private static int sundaycolor = Color.RED;
-    private static int todaycolor = Color.BLUE;
-    private static int everydaycolor = Color.BLACK;
+    private static int sundaycolor = Color.parseColor("#ff0000");
+    private static int todaycolor = Color.parseColor("#0000ff");
+    private static int everydaycolor = Color.parseColor("#000000");
     private static int year_set = 2018;
     private static ArrayList<List_entry> database = new ArrayList<List_entry>();
     private static ArrayList<List_entry> list_values = new ArrayList<List_entry>();
@@ -116,7 +116,15 @@ public class MainActivity extends AppCompatActivity {
                 DataLoader loader = new DataLoader();
                 SettingsSet set = new SettingsSet(sundaycolor,todaycolor,everydaycolor,date_pattern,dayofweek_pattern,year_set);
                 System.out.println(set.toString());
-                loader.saveSettings(set);
+                //loader.saveSettings(set);
+
+                set = loader.getSettings();
+                MainActivity.LoadSetting(set);
+
+                Intent myIntent = new Intent(MainActivity.this, SettActivity.class);
+                myIntent.putExtra("key", "nothing"); //Optional parameters
+                MainActivity.this.startActivity(myIntent);
+
 
             }
         });
@@ -157,6 +165,8 @@ public class MainActivity extends AppCompatActivity {
     public static void initialize_list(Calendar selected_year)
     {
 
+        list_values.clear();
+
         for (int m = 0;m<12;m++) {
             for (int d = 0;d<selected_year.getActualMaximum(Calendar.DAY_OF_MONTH);d++)
             {
@@ -184,11 +194,7 @@ public class MainActivity extends AppCompatActivity {
 
         lista.setAdapter(adapter);
 
-    }
 
-    public void addEntry(Calendar date, String note)
-    {
-        database.add(new List_entry(getFileFormatEntryDate(date),note));
     }
 
 
@@ -244,6 +250,8 @@ public class MainActivity extends AppCompatActivity {
         everydaycolor = set.getEverydaycolor();
         date_pattern = set.getDate_pattern();
         dayofweek_pattern = set.getDayofweek_pattern();
+        year_set = set.getSelected_year();
+        selected_year.set(year_set,0,1);
         initialize_list(selected_year);
     }
 }

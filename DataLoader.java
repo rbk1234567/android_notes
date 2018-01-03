@@ -25,7 +25,7 @@ public class DataLoader {
 
     public ArrayList<List_entry> getDatabase()
     {
-        File file = new File(savepath);
+
         ArrayList<List_entry> loadeddata = new ArrayList<List_entry>();
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -65,7 +65,7 @@ public class DataLoader {
 
     public SettingsSet getSettings()
     {
-        File file = new File(settingssavepath);
+
         SettingsSet loadeddata = new SettingsSet();
         ObjectMapper mapper = new ObjectMapper();
         try {
