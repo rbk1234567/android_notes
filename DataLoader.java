@@ -1,6 +1,7 @@
 package com.example.rbk.notatnik.git;
 
 import android.os.Environment;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -28,10 +29,21 @@ public class DataLoader {
 
         ArrayList<List_entry> loadeddata = new ArrayList<List_entry>();
         ObjectMapper mapper = new ObjectMapper();
+
         try {
             loadeddata = mapper.readValue(new FileReader(savepath), TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, List_entry.class));
         } catch (IOException e) {
             e.printStackTrace();
+            //Toast.makeText(SettActivity.getContext(), "Can't load data from file.", Toast.LENGTH_LONG).show();
+            /*
+            saveDatabase(loadeddata);
+
+            try {
+                loadeddata = mapper.readValue(new FileReader(savepath), TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, List_entry.class));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            */
         }
         return loadeddata;
     }
@@ -72,6 +84,7 @@ public class DataLoader {
             loadeddata = mapper.readValue(new FileReader(settingssavepath), SettingsSet.class);
         } catch (IOException e) {
             e.printStackTrace();
+            //Toast.makeText(SettActivity.getContext(), "Can't load settings from file. Default settings will be used.", Toast.LENGTH_LONG).show();
         }
         return loadeddata;
     }

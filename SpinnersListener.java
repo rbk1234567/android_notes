@@ -65,6 +65,14 @@ public class SpinnersListener implements AdapterView.OnItemSelectedListener {
                     SettActivity.setEverydayColorPreview();
                     break;
 
+                case R.id.date_spinner:
+                    Toast.makeText(SettActivity.getContext(), "DATE FORMAT " + adapterView.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case R.id.day_name_spinner:
+                    Toast.makeText(SettActivity.getContext(), "DAY NAME FORMAT " + adapterView.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show();
+                    break;
+
             }
         }
 

@@ -2,6 +2,7 @@ package com.example.rbk.notatnik.git;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.rbk.notatnik.R;
 
@@ -54,9 +56,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
     super.onStart();
-    current_date.set(2017,2,3);
+    current_date.set(2018,2,3);
     loadDatabase();
-    initialize_list(selected_year);
+    DataLoader loader = new DataLoader();
+    LoadSettings(loader.getSettings());
     initialize_buttons();
 
     }
@@ -67,12 +70,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initialize_buttons() {
-        bt_today.setText(">>>  "+this.getDisplayDate(date_pattern,current_date)+"  <<<");
+        bt_today.setText(">>> GO TODAY "+this.getDisplayDate(date_pattern,current_date)+"  <<<");
         bt_today.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                //look for today date on the list then scroll to it and position it at 1/4 of screen height
+                //look for today date on the hexlist then scroll to it and position it at 1/4 of screen height
                 for (int i =0;i<lista.getAdapter().getCount();i++)
                 {
                     List_entry entry = (List_entry) lista.getAdapter().getItem(i);
@@ -119,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 //loader.saveSettings(set);
 
                 set = loader.getSettings();
-                MainActivity.LoadSetting(set);
+                MainActivity.LoadSettings(set);
 
                 Intent myIntent = new Intent(MainActivity.this, SettActivity.class);
                 myIntent.putExtra("key", "nothing"); //Optional parameters
@@ -243,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
         return everydaycolor;
     }
 
-    public static void LoadSetting(SettingsSet set)
+    public static void LoadSettings(SettingsSet set)
     {
         sundaycolor = set.getSundaycolor();
         todaycolor = set.getTodaycolor();
@@ -254,4 +257,11 @@ public class MainActivity extends AppCompatActivity {
         selected_year.set(year_set,0,1);
         initialize_list(selected_year);
     }
+
+    public static void SaveSettings(SettingsSet set) {
+        DataLoader loader = new DataLoader();
+        loader.saveSettings(set);
+    }
+
+
 }
