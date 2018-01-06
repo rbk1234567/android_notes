@@ -50,7 +50,15 @@ public class Custom_listview_adapter extends ArrayAdapter {
             }
 
             if (TvNote != null) {
-                TvNote.setText(entry.getNote());
+                String notetodisplay = entry.getNote();
+                try {
+                    notetodisplay = notetodisplay.substring(0, 20);
+                }
+                catch (StringIndexOutOfBoundsException e)
+                {
+                    e.printStackTrace();
+                }
+                TvNote.setText(notetodisplay);
 
             }
 

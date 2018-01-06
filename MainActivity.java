@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<List_entry> database = new ArrayList<List_entry>();
     private static ArrayList<List_entry> list_values = new ArrayList<List_entry>();
     private static Custom_listview_adapter adapter;
+    static final int EDIT_REQUEST = 7;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
     super.onStart();
-    current_date.set(2018,2,3);
+    //current_date.set(2018,2,3);
     loadDatabase();
     DataLoader loader = new DataLoader();
     LoadSettings(loader.getSettings());
@@ -99,18 +100,21 @@ public class MainActivity extends AppCompatActivity {
 
                 int position = i;
 
-                list_values.get(i).setNote("clicked");
+                Intent editIntent = new Intent(MainActivity.this, EditActivity.class);
+                editIntent.putExtra("position",i);
+                editIntent.putExtra("date", MainActivity.list_values.get(i).getDate());
+                editIntent.putExtra("note",MainActivity.list_values.get(i).getNote());
 
-                MainActivity.addEntryToDatabase(new List_entry(MainActivity.list_values.get(i).getDate(), MainActivity.list_values.get(i).getNote()));
-                DataLoader loader = new DataLoader();
-                loader.saveDatabase(database);
+                MainActivity.this.startActivityForResult(editIntent,EDIT_REQUEST);
 
-                adapter.notifyDataSetChanged();
+
+
 
             }
 
 
         });
+
 
         bt_settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +135,34 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent response) {
+        // read result of edition window request
+        // get edited item position on list
+        // if result was ok (save) check wheather response date is the same as list item date for safety
+        // save changes to database
+        if (requestCode == EDIT_REQUEST) {
+            // Make sure the request was successful
+            if(resultCode == RESULT_OK)
+            {
+
+                int position = Integer.parseInt(response.getExtras().get("position").toString());
+                String responsenote = response.getExtras().get("note").toString();
+                String responsedate = response.getExtras().get("date").toString();
+
+
+                if(MainActivity.list_values.get(position).getDate().equalsIgnoreCase(responsedate)) {
+                    MainActivity.addEntryToDatabase(new List_entry(MainActivity.list_values.get(position).getDate(), responsenote));
+                    DataLoader loader = new DataLoader();
+                    loader.saveDatabase(database);
+
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+        }
     }
 
     public static void addEntryToDatabase(List_entry entry)

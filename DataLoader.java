@@ -34,16 +34,6 @@ public class DataLoader {
             loadeddata = mapper.readValue(new FileReader(savepath), TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, List_entry.class));
         } catch (IOException e) {
             e.printStackTrace();
-            //Toast.makeText(SettActivity.getContext(), "Can't load data from file.", Toast.LENGTH_LONG).show();
-            /*
-            saveDatabase(loadeddata);
-
-            try {
-                loadeddata = mapper.readValue(new FileReader(savepath), TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, List_entry.class));
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            */
         }
         return loadeddata;
     }

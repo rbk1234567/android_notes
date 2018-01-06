@@ -36,6 +36,7 @@ public class SettActivity extends AppCompatActivity {
     static Spinner date_spinner;
     static Spinner day_name_spinner;
     static ImageButton savesettings_button;
+    static ImageButton goback_button;
     static ArrayList<String> hexlist;
     static ArrayList<String> day_name_formats;
     static ArrayList<String> date_formats;
@@ -60,16 +61,27 @@ public class SettActivity extends AppCompatActivity {
         savesettings_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //sets date and day name formats
+                //save settings to file
+                //reload settings for main window to make changes visible
+                //close settings window (back to main window)
                 setDateFormat();
                 setDayNameFormat();
 
                 MainActivity.SaveSettings(set);
                 MainActivity.LoadSettings(set);
+                finish();
             }
         });
 
-
+        goback_button = (ImageButton)findViewById(R.id.goback_button);
+        goback_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //close settings window (back to main window)
+                finish();
+            }
+        });
 
         spinners_listener = new SpinnersListener();
 
