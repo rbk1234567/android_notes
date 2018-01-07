@@ -1,6 +1,7 @@
 package com.example.rbk.notatnik.git;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -21,31 +22,29 @@ import java.util.ArrayList;
 public class SettActivity extends AppCompatActivity {
 
     static Context settings_context;
-    static Spinner sunday_red_spinner;
-    static Spinner today_red_spinner;
-    static Spinner everyday_red_spinner;
-    static Spinner sunday_green_spinner;
-    static Spinner today_green_spinner;
-    static Spinner everyday_green_spinner;
-    static Spinner sunday_blue_spinner;
-    static Spinner today_blue_spinner;
-    static Spinner everyday_blue_spinner;
+
     static ProgressBar sunday_bar;
     static ProgressBar today_bar;
     static ProgressBar everyday_bar;
     static Spinner date_spinner;
     static Spinner day_name_spinner;
+    static Spinner year_sel_spinner;
     static ImageButton savesettings_button;
     static ImageButton goback_button;
+    static Button bt_sunday_pick;
+    static Button bt_today_pick;
+    static Button bt_everyday_pick;
+
     static ArrayList<String> hexlist;
     static ArrayList<String> day_name_formats;
     static ArrayList<String> date_formats;
+    static ArrayList<String> yearslist;
 
     SpinnersListener spinners_listener;
     static Boolean userIsInteracting= false;
 
     static SettingsSet set = new SettingsSet();
-
+    private int COLOR_REQUEST = 3;
 
 
 
@@ -67,6 +66,7 @@ public class SettActivity extends AppCompatActivity {
                 //close settings window (back to main window)
                 setDateFormat();
                 setDayNameFormat();
+                setSelectedYear();
 
                 MainActivity.SaveSettings(set);
                 MainActivity.LoadSettings(set);
@@ -83,6 +83,41 @@ public class SettActivity extends AppCompatActivity {
             }
         });
 
+        bt_sunday_pick = (Button)findViewById(R.id.bt_sunday_pick);
+        bt_sunday_pick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent editIntent = new Intent(SettActivity.this, ColorPickActivity.class);
+                editIntent.putExtra("day","Sunday");
+                editIntent.putExtra("color",set.getSundaycolor());
+                SettActivity.this.startActivityForResult(editIntent,COLOR_REQUEST);
+
+            }
+        });
+
+        bt_today_pick = (Button)findViewById(R.id.bt_today_pick);
+        bt_today_pick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent editIntent = new Intent(SettActivity.this, ColorPickActivity.class);
+                editIntent.putExtra("day","Today");
+                editIntent.putExtra("color",set.getTodaycolor());
+                SettActivity.this.startActivityForResult(editIntent,COLOR_REQUEST);
+            }
+        });
+
+        bt_everyday_pick = (Button)findViewById(R.id.bt_everyday_pick);
+        bt_everyday_pick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent editIntent = new Intent(SettActivity.this, ColorPickActivity.class);
+                editIntent.putExtra("day","Everyday");
+                editIntent.putExtra("color",set.getEverydaycolor());
+                SettActivity.this.startActivityForResult(editIntent,COLOR_REQUEST);
+            }
+        });
+
+
         spinners_listener = new SpinnersListener();
 
         this.date_spinner = (Spinner) findViewById(R.id.date_spinner);
@@ -90,40 +125,16 @@ public class SettActivity extends AppCompatActivity {
         this.day_name_spinner = (Spinner) findViewById(R.id.day_name_spinner);
         this.day_name_spinner.setOnItemSelectedListener(spinners_listener);
 
-        this.sunday_red_spinner = (Spinner) findViewById(R.id.sunday_red_spinner);
-        this.sunday_red_spinner.setOnItemSelectedListener(spinners_listener);
-
-        this.today_red_spinner = (Spinner) findViewById(R.id.today_red_spinner);
-        this.today_red_spinner.setOnItemSelectedListener(spinners_listener);
-
-        this.everyday_red_spinner = (Spinner) findViewById(R.id.everyday_red_spinner);
-        this.everyday_red_spinner.setOnItemSelectedListener(spinners_listener);
-
-        this.sunday_green_spinner = (Spinner) findViewById(R.id.sunday_green_spinner);
-        this.sunday_green_spinner.setOnItemSelectedListener(spinners_listener);
-
-        this.today_green_spinner = (Spinner) findViewById(R.id.today_green_spinner);
-        this.today_green_spinner.setOnItemSelectedListener(spinners_listener);
-
-        this.everyday_green_spinner = (Spinner) findViewById(R.id.everyday_green_spinner);
-        this.everyday_green_spinner.setOnItemSelectedListener(spinners_listener);
-
-        this.sunday_blue_spinner = (Spinner) findViewById(R.id.sunday_blue_spinner);
-        this.sunday_blue_spinner.setOnItemSelectedListener(spinners_listener);
-
-        this.today_blue_spinner = (Spinner) findViewById(R.id.today_blue_spinner);
-        this.today_blue_spinner.setOnItemSelectedListener(spinners_listener);
-
-        this.everyday_blue_spinner = (Spinner) findViewById(R.id.everyday_blue_spinner);
-        this.everyday_blue_spinner.setOnItemSelectedListener(spinners_listener);
 
         this.sunday_bar = (ProgressBar)findViewById(R.id.sunday_bar);
         this.today_bar = (ProgressBar)findViewById(R.id.today_bar);
         this.everyday_bar = (ProgressBar)findViewById(R.id.everyday_bar);
 
+        this.year_sel_spinner = (Spinner)findViewById(R.id.year_sel_spinner);
 
         initialize_spinners_values();
         initialize_spinners();
+
 
     }
 
@@ -157,42 +168,40 @@ public class SettActivity extends AppCompatActivity {
         day_name_formats = new ArrayList<String>();
         day_name_formats.add("short names");
         day_name_formats.add("long names");
+
+        yearslist = new ArrayList<String>();
+        for(int i=2018;i<2101;i++)
+        {
+            yearslist.add(String.valueOf(i));
+        }
     }
 
     private void initialize_spinners()
     //fill spinner selectors with data
     //call preview of colors
     {
-        //initialize RGB values spinners
-        ArrayAdapter<String> rgb_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, hexlist);
-        rgb_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sunday_red_spinner.setAdapter(rgb_adapter);
-        sunday_green_spinner.setAdapter(rgb_adapter);
-        sunday_blue_spinner.setAdapter(rgb_adapter);
-        today_red_spinner.setAdapter(rgb_adapter);
-        today_green_spinner.setAdapter(rgb_adapter);
-        today_blue_spinner.setAdapter(rgb_adapter);
-        everyday_red_spinner.setAdapter(rgb_adapter);
-        everyday_green_spinner.setAdapter(rgb_adapter);
-        everyday_blue_spinner.setAdapter(rgb_adapter);
+
 
         //initialize day format spinner
-        Spinner day_spinner = (Spinner)findViewById(R.id.day_name_spinner);
         ArrayAdapter<String> day_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,day_name_formats);
         day_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        day_spinner.setAdapter(day_adapter);
+        day_name_spinner.setAdapter(day_adapter);
 
         //initialize date format spinner
-        Spinner date_spinner = (Spinner)findViewById(R.id.date_spinner);
         ArrayAdapter<String> date_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,date_formats);
         date_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         date_spinner.setAdapter(date_adapter);
 
+        //initialize year selection spinner
+        ArrayAdapter<String> year_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,yearslist);
+        year_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        year_sel_spinner.setAdapter(year_adapter);
+
         selectSpinnerInitialValues(set);
 
-        setSundayColorPreview();
-        setTodayColorPreview();
-        setEverydayColorPreview();
+        setSundayColorPreview(set.getSundaycolor());
+        setTodayColorPreview(set.getTodaycolor());
+        setEverydayColorPreview(set.getEverydaycolor());
     }
     @Override
     public void onUserInteraction() {
@@ -204,40 +213,15 @@ public class SettActivity extends AppCompatActivity {
     private void selectSpinnerInitialValues(SettingsSet set)
             //set initial values for spinner selectors based on loaded SettingsSet
     {
-        String SundayHexColor = String.format("#%06X", (0xFFFFFF & set.getSundaycolor()));
-        String TodayHexColor = String.format("#%06X", (0xFFFFFF & set.getTodaycolor()));
-        String EverydayHexColor = String.format("#%06X", (0xFFFFFF & set.getEverydaycolor()));
+
         String date_format = set.getDate_pattern();
         String day_name_format = set.getDayofweek_pattern();
+        int selected_year = set.getSelected_year();
 
-
-        SundayHexColor = SundayHexColor.replace("#","");
-        String SundayRed = SundayHexColor.substring(0,2);
-        sunday_red_spinner.setSelection(getPositionOfHexColor(SundayRed));
-        String SundayGreen = SundayHexColor.substring(2,4);
-        sunday_green_spinner.setSelection(getPositionOfHexColor(SundayGreen));
-        String SundayBlue = SundayHexColor.substring(4,6);
-        sunday_blue_spinner.setSelection(getPositionOfHexColor(SundayBlue));
-
-
-        TodayHexColor = TodayHexColor.replace("#","");
-        String TodayRed = TodayHexColor.substring(0,2);
-        today_red_spinner.setSelection(getPositionOfHexColor(TodayRed));
-        String TodayGreen = TodayHexColor.substring(2,4);
-        today_green_spinner.setSelection(getPositionOfHexColor(TodayGreen));
-        String TodayBlue = TodayHexColor.substring(4,6);
-        today_blue_spinner.setSelection(getPositionOfHexColor(TodayBlue));
-
-        EverydayHexColor = EverydayHexColor.replace("#","");
-        String EverydayRed = EverydayHexColor.substring(0,2);
-        everyday_red_spinner.setSelection(getPositionOfHexColor(EverydayRed));
-        String EverydayGreen = EverydayHexColor.substring(2,4);
-        everyday_green_spinner.setSelection(getPositionOfHexColor(EverydayGreen));
-        String EverydayBlue = EverydayHexColor.substring(4,6);
-        everyday_blue_spinner.setSelection(getPositionOfHexColor(EverydayBlue));
 
         date_spinner.setSelection(getPositionOfDateFormat(date_format));
         day_name_spinner.setSelection(getPositionOfDayName(day_name_format));
+        year_sel_spinner.setSelection(getPositionOfYear(selected_year));
 
 
     }
@@ -294,38 +278,47 @@ public class SettActivity extends AppCompatActivity {
         return position;
     }
 
-    public static void setSundayColorPreview() {
-        //mixes selected RGB values into result color
+    private int getPositionOfYear(int year)
+    {
+        int position=0;
+        for(int i = 0; i< yearslist.size(); i++)
+        {
+            if(yearslist.get(i).equalsIgnoreCase(String.valueOf(set.selected_year)))
+            {
+                position = i;
+            }
+        }
+        return position;
+    }
+
+    public static void setSundayColorPreview(int colorhex) {
         //saves this color to SettingSet variable (can be save to file with SAVE button)
         //shows preview of this color
-        String colorhex = ("#"+sunday_red_spinner.getSelectedItem().toString()+sunday_green_spinner.getSelectedItem().toString()+sunday_blue_spinner.getSelectedItem().toString());
-        System.out.println(colorhex);
-        sunday_bar.setBackgroundColor(Color.parseColor(colorhex));
-        set.setSundaycolor(Color.parseColor(colorhex));
-        sunday_bar.getProgressDrawable().setColorFilter(Color.parseColor(colorhex), PorterDuff.Mode.SRC_IN);
+
+        sunday_bar.setBackgroundColor(colorhex);
+        set.setSundaycolor(colorhex);
+        sunday_bar.getProgressDrawable().setColorFilter(colorhex, PorterDuff.Mode.SRC_IN);
         sunday_bar.invalidate();
     }
 
-    public static void setTodayColorPreview() {
-        //mixes selected RGB values into result color
+    public static void setTodayColorPreview(int colorhex) {
+
         //saves this color to SettingSet variable (can be save to file with SAVE button)
         //shows preview of this color
-        String colorhex = ("#"+today_red_spinner.getSelectedItem().toString()+today_green_spinner.getSelectedItem().toString()+today_blue_spinner.getSelectedItem().toString());
-        System.out.println(colorhex);
-        today_bar.setBackgroundColor(Color.parseColor(colorhex));
-        set.setTodaycolor(Color.parseColor(colorhex));
-        today_bar.getProgressDrawable().setColorFilter(Color.parseColor(colorhex), PorterDuff.Mode.SRC_IN);
+
+        today_bar.setBackgroundColor(colorhex);
+        set.setTodaycolor(colorhex);
+        today_bar.getProgressDrawable().setColorFilter(colorhex, PorterDuff.Mode.SRC_IN);
         today_bar.invalidate();
     }
-    public static void setEverydayColorPreview() {
-        //mixes selected RGB values into result color
+    public static void setEverydayColorPreview(int colorhex) {
+
         //saves this color to SettingSet variable (can be save to file with SAVE button)
         //shows preview of this color
-        String colorhex = ("#"+everyday_red_spinner.getSelectedItem().toString()+everyday_green_spinner.getSelectedItem().toString()+everyday_blue_spinner.getSelectedItem().toString());
-        System.out.println(colorhex);
-        everyday_bar.setBackgroundColor(Color.parseColor(colorhex));
-        set.setEverydaycolor(Color.parseColor(colorhex));
-        everyday_bar.getProgressDrawable().setColorFilter(Color.parseColor(colorhex), PorterDuff.Mode.SRC_IN);
+
+        everyday_bar.setBackgroundColor(colorhex);
+        set.setEverydaycolor(colorhex);
+        everyday_bar.getProgressDrawable().setColorFilter(colorhex, PorterDuff.Mode.SRC_IN);
         everyday_bar.invalidate();
     }
 
@@ -349,6 +342,11 @@ public class SettActivity extends AppCompatActivity {
         }
     }
 
+    public static void setSelectedYear()
+    {
+        set.setSelected_year(Integer.parseInt(year_sel_spinner.getSelectedItem().toString()));
+    }
+
     public static Context getContext() {
         return settings_context;
     }
@@ -360,20 +358,51 @@ public class SettActivity extends AppCompatActivity {
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Toast.makeText(settings_context, "landscape", Toast.LENGTH_SHORT).show();
-            SettActivity.setSundayColorPreview();
-            SettActivity.setTodayColorPreview();
-            SettActivity.setEverydayColorPreview();
+            SettActivity.setSundayColorPreview(set.getSundaycolor());
+            SettActivity.setTodayColorPreview(set.getTodaycolor());
+            SettActivity.setEverydayColorPreview(set.getEverydaycolor());
             System.out.println("LANDSCAPE");
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
             Toast.makeText(settings_context, "portrait", Toast.LENGTH_SHORT).show();
-            SettActivity.setSundayColorPreview();
-            SettActivity.setTodayColorPreview();
-            SettActivity.setEverydayColorPreview();
+            SettActivity.setSundayColorPreview(set.getSundaycolor());
+            SettActivity.setTodayColorPreview(set.getTodaycolor());
+            SettActivity.setEverydayColorPreview(set.getEverydaycolor());
             System.out.println("PORTRAIT");
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent response) {
+        // read result of edition window request
+        // get edited item position on list
+        // if result was ok (save) check wheather response date is the same as list item date for safety
+        // save changes to database
+        if (requestCode == COLOR_REQUEST)
+        {
+            // Make sure the request was successful
+            if(resultCode == RESULT_OK)
+            {
 
+                String day = response.getExtras().get("day").toString();
+                int color = Integer.parseInt(response.getExtras().get("color").toString());
+
+                switch (day)
+                {
+                    case "Sunday":
+                        setSundayColorPreview(color);
+                        break;
+                    case "Today":
+                        setTodayColorPreview(color);
+                        break;
+                    case "Everyday":
+                        setEverydayColorPreview(color);
+                        break;
+
+            }
+            }
+
+        }
+    }
 
 
 }

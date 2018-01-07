@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
         for (int m = 0;m<12;m++) {
             for (int d = 0;d<selected_year.getActualMaximum(Calendar.DAY_OF_MONTH);d++)
             {
-                list_values.add(new List_entry(MainActivity.getFileFormatEntryDate(selected_year),"notatka"));
+                list_values.add(new List_entry(MainActivity.getFileFormatEntryDate(selected_year),""));
                 selected_year.roll(Calendar.DAY_OF_MONTH,1);
             }
 

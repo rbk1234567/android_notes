@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,13 +27,16 @@ public class EditActivity extends AppCompatActivity {
     static ImageButton bt_save;
     static TextView title_caption;
     static int position;
+    static Context context;
+    static Toast toast = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-        final Context context = this;
+        context = this;
         final Intent intent = getIntent();
         final String date = intent.getExtras().get("date").toString();
         final String note = intent.getExtras().get("note").toString();
@@ -44,7 +50,7 @@ public class EditActivity extends AppCompatActivity {
         bt_save = (ImageButton)findViewById(R.id.bt_edit_save);
         title_caption = (TextView)findViewById(R.id.EditionTitle);
 
-        title_caption.setText(title_caption.getText()+entry.getDate());
+        title_caption.setText(title_caption.getText()+" "+MainActivity.getDisplayDate(MainActivity.getDate_pattern(),MainActivity.getCalendarFromFile(entry.getDate())));
         editText.setText(entry.getNote());
 
 
@@ -77,8 +83,12 @@ public class EditActivity extends AppCompatActivity {
             }
         });
 
-        editText.addTextChangedListener(new TextWatcher() {
+        setEditTextFieldProperties();
+    }
 
+    private void setEditTextFieldProperties()
+    {
+        editText.addTextChangedListener(new TextWatcher() {
             // shows EditText window text lenght limit toast
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
@@ -88,9 +98,17 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
-                if(count>255)
+                if(editText.getText().length()>255)
                 {
-                    Toast.makeText(context,"Text lenght limit is 256",Toast.LENGTH_SHORT).show();
+                    if(toast!=null) {
+                        if (toast.getView().isShown()) {
+                            toast.cancel();
+                        }
+                    }
+
+                    toast = Toast.makeText(context,"Text lenght limit is 256",Toast.LENGTH_SHORT);
+                    toast.show();
+
                 }
             }
 
@@ -99,5 +117,27 @@ public class EditActivity extends AppCompatActivity {
 
             }
         });
+
+        editText.setCustomSelectionActionModeCallback(new ActionMode.Callback()
+        // prevent edit window to copy/paste (text limit)
+        {
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+            }
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
+            }
+        });
+
     }
 }

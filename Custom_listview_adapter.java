@@ -29,6 +29,7 @@ public class Custom_listview_adapter extends ArrayAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
+            // generate view for list items entries (date and part of note)
     {
         View view = convertView;
         if (view == null) {
@@ -52,7 +53,9 @@ public class Custom_listview_adapter extends ArrayAdapter {
             if (TvNote != null) {
                 String notetodisplay = entry.getNote();
                 try {
-                    notetodisplay = notetodisplay.substring(0, 20);
+                    notetodisplay = notetodisplay.replace("\r\n"," ").replace("\n"," ");
+                    notetodisplay = notetodisplay.substring(0, 30);
+                    notetodisplay = notetodisplay+"...";
                 }
                 catch (StringIndexOutOfBoundsException e)
                 {
