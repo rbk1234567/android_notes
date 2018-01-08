@@ -28,8 +28,8 @@ public class ColorPickActivity extends AppCompatActivity {
 
     static Context context;
     static int selectedcolor;
-    static String day = null;
-    static ProgressBar colorpreview;
+    static String for_var = null;
+    static View colorpreview;
     static ImageView image_palette;
     static ImageButton bt_back;
     static ImageButton bt_save;
@@ -40,13 +40,13 @@ public class ColorPickActivity extends AppCompatActivity {
         setContentView(R.layout.activity_color_pick);
         context = getApplicationContext();
 
-        colorpreview = (ProgressBar)findViewById(R.id.color_preview);
+        colorpreview = (View)findViewById(R.id.color_preview);
         image_palette = (ImageView)findViewById(R.id.image_palette);
         bt_back = (ImageButton)findViewById(R.id.colorpick_back_button);
         bt_save = (ImageButton)findViewById(R.id.colorpick_save_button);
 
         Intent intent = getIntent();
-        day = intent.getExtras().get("day").toString();
+        for_var = intent.getExtras().get("for").toString();
         selectedcolor = Integer.parseInt(intent.getExtras().get("color").toString());
         colorpreview.setBackgroundColor(selectedcolor);
 
@@ -65,7 +65,7 @@ public class ColorPickActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent result = new Intent();
-                result.putExtra("day",day);
+                result.putExtra("for",for_var);
                 result.putExtra("color",selectedcolor);
                 setResult(RESULT_OK,result);
                 finish();
@@ -136,7 +136,6 @@ public class ColorPickActivity extends AppCompatActivity {
     private static void setPreviewColor(int color)
     {
 
-        colorpreview.getProgressDrawable().setColorFilter(color,PorterDuff.Mode.SRC_IN);
         colorpreview.setBackgroundColor(color);
         colorpreview.invalidate();
     }

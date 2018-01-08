@@ -23,9 +23,11 @@ public class SettActivity extends AppCompatActivity {
 
     static Context settings_context;
 
-    static ProgressBar sunday_bar;
-    static ProgressBar today_bar;
-    static ProgressBar everyday_bar;
+    static View sunday_bar;
+    static View today_bar;
+    static View everyday_bar;
+    static View datetext_bar;
+    static View notetext_bar;
     static Spinner date_spinner;
     static Spinner day_name_spinner;
     static Spinner year_sel_spinner;
@@ -34,8 +36,9 @@ public class SettActivity extends AppCompatActivity {
     static Button bt_sunday_pick;
     static Button bt_today_pick;
     static Button bt_everyday_pick;
+    static Button bt_date_text_color_pick;
+    static Button bt_note_text_color_pick;
 
-    static ArrayList<String> hexlist;
     static ArrayList<String> day_name_formats;
     static ArrayList<String> date_formats;
     static ArrayList<String> yearslist;
@@ -88,7 +91,7 @@ public class SettActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent editIntent = new Intent(SettActivity.this, ColorPickActivity.class);
-                editIntent.putExtra("day","Sunday");
+                editIntent.putExtra("for","Sunday");
                 editIntent.putExtra("color",set.getSundaycolor());
                 SettActivity.this.startActivityForResult(editIntent,COLOR_REQUEST);
 
@@ -100,7 +103,7 @@ public class SettActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent editIntent = new Intent(SettActivity.this, ColorPickActivity.class);
-                editIntent.putExtra("day","Today");
+                editIntent.putExtra("for","Today");
                 editIntent.putExtra("color",set.getTodaycolor());
                 SettActivity.this.startActivityForResult(editIntent,COLOR_REQUEST);
             }
@@ -111,8 +114,30 @@ public class SettActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent editIntent = new Intent(SettActivity.this, ColorPickActivity.class);
-                editIntent.putExtra("day","Everyday");
+                editIntent.putExtra("for","Everyday");
                 editIntent.putExtra("color",set.getEverydaycolor());
+                SettActivity.this.startActivityForResult(editIntent,COLOR_REQUEST);
+            }
+        });
+
+        bt_date_text_color_pick = (Button)findViewById(R.id.bt_date_text_color_pick);
+        bt_date_text_color_pick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent editIntent = new Intent(SettActivity.this, ColorPickActivity.class);
+                editIntent.putExtra("for","datetext");
+                editIntent.putExtra("color",set.getDate_text_color());
+                SettActivity.this.startActivityForResult(editIntent,COLOR_REQUEST);
+            }
+        });
+
+        bt_note_text_color_pick = (Button)findViewById(R.id.bt_note_text_color_pick);
+        bt_note_text_color_pick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent editIntent = new Intent(SettActivity.this, ColorPickActivity.class);
+                editIntent.putExtra("for","notetext");
+                editIntent.putExtra("color",set.getNote_text_color());
                 SettActivity.this.startActivityForResult(editIntent,COLOR_REQUEST);
             }
         });
@@ -126,9 +151,11 @@ public class SettActivity extends AppCompatActivity {
         this.day_name_spinner.setOnItemSelectedListener(spinners_listener);
 
 
-        this.sunday_bar = (ProgressBar)findViewById(R.id.sunday_bar);
-        this.today_bar = (ProgressBar)findViewById(R.id.today_bar);
-        this.everyday_bar = (ProgressBar)findViewById(R.id.everyday_bar);
+        this.sunday_bar = (View)findViewById(R.id.sunday_bar);
+        this.today_bar = (View)findViewById(R.id.today_bar);
+        this.everyday_bar = (View)findViewById(R.id.everyday_bar);
+        this.datetext_bar = (View)findViewById(R.id.date_text_bar);
+        this.notetext_bar = (View)findViewById(R.id.note_text_bar);
 
         this.year_sel_spinner = (Spinner)findViewById(R.id.year_sel_spinner);
 
@@ -140,23 +167,6 @@ public class SettActivity extends AppCompatActivity {
 
     private void initialize_spinners_values()
     {
-        hexlist = new ArrayList<String>();
-        hexlist.add("00");
-        hexlist.add("11");
-        hexlist.add("22");
-        hexlist.add("33");
-        hexlist.add("44");
-        hexlist.add("55");
-        hexlist.add("66");
-        hexlist.add("77");
-        hexlist.add("88");
-        hexlist.add("99");
-        hexlist.add("AA");
-        hexlist.add("BB");
-        hexlist.add("CC");
-        hexlist.add("DD");
-        hexlist.add("EE");
-        hexlist.add("FF");
 
         date_formats = new ArrayList<String>();
         date_formats.add("dd/MM/yyyy");
@@ -202,6 +212,8 @@ public class SettActivity extends AppCompatActivity {
         setSundayColorPreview(set.getSundaycolor());
         setTodayColorPreview(set.getTodaycolor());
         setEverydayColorPreview(set.getEverydaycolor());
+        setDate_text_colorPreview(set.getDate_text_color());
+        setNote_text_colorPreview(set.getNote_text_color());
     }
     @Override
     public void onUserInteraction() {
@@ -226,19 +238,6 @@ public class SettActivity extends AppCompatActivity {
 
     }
 
-    private int getPositionOfHexColor(String hexColor)
-    //set the initial spinner value for color value
-    {
-        int position=0;
-        for(int i = 0; i< hexlist.size(); i++)
-        {
-            if(hexlist.get(i).equalsIgnoreCase(hexColor))
-            {
-                position = i;
-            }
-        }
-        return position;
-    }
 
     private int getPositionOfDateFormat(String dateformat)
     //set the initial spinner value for date format
@@ -297,7 +296,6 @@ public class SettActivity extends AppCompatActivity {
 
         sunday_bar.setBackgroundColor(colorhex);
         set.setSundaycolor(colorhex);
-        sunday_bar.getProgressDrawable().setColorFilter(colorhex, PorterDuff.Mode.SRC_IN);
         sunday_bar.invalidate();
     }
 
@@ -308,7 +306,6 @@ public class SettActivity extends AppCompatActivity {
 
         today_bar.setBackgroundColor(colorhex);
         set.setTodaycolor(colorhex);
-        today_bar.getProgressDrawable().setColorFilter(colorhex, PorterDuff.Mode.SRC_IN);
         today_bar.invalidate();
     }
     public static void setEverydayColorPreview(int colorhex) {
@@ -318,8 +315,21 @@ public class SettActivity extends AppCompatActivity {
 
         everyday_bar.setBackgroundColor(colorhex);
         set.setEverydaycolor(colorhex);
-        everyday_bar.getProgressDrawable().setColorFilter(colorhex, PorterDuff.Mode.SRC_IN);
         everyday_bar.invalidate();
+    }
+
+    public static void setDate_text_colorPreview(int colorhex)
+    {
+        datetext_bar.setBackgroundColor(colorhex);
+        set.setDate_text_color(colorhex);
+        datetext_bar.invalidate();
+    }
+
+    public static void setNote_text_colorPreview(int colorhex)
+    {
+        notetext_bar.setBackgroundColor(colorhex);
+        set.setNote_text_color(colorhex);
+        notetext_bar.invalidate();
     }
 
     public static void setDateFormat()
@@ -383,7 +393,7 @@ public class SettActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK)
             {
 
-                String day = response.getExtras().get("day").toString();
+                String day = response.getExtras().get("for").toString();
                 int color = Integer.parseInt(response.getExtras().get("color").toString());
 
                 switch (day)
@@ -396,6 +406,12 @@ public class SettActivity extends AppCompatActivity {
                         break;
                     case "Everyday":
                         setEverydayColorPreview(color);
+                        break;
+                    case "datetext":
+                        setDate_text_colorPreview(color);
+                        break;
+                    case "notetext":
+                        setNote_text_colorPreview(color);
                         break;
 
             }

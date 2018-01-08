@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private static int sundaycolor = Color.parseColor("#ff0000");
     private static int todaycolor = Color.parseColor("#0000ff");
     private static int everydaycolor = Color.parseColor("#000000");
+    private static int date_text_color = Color.parseColor("#ffffff");
+    private static int note_text_color = Color.parseColor("#eeeeee");
     private static int year_set = 2018;
     private static ArrayList<List_entry> database = new ArrayList<List_entry>();
     private static ArrayList<List_entry> list_values = new ArrayList<List_entry>();
@@ -121,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 DataLoader loader = new DataLoader();
-                SettingsSet set = new SettingsSet(sundaycolor,todaycolor,everydaycolor,date_pattern,dayofweek_pattern,year_set);
+                SettingsSet set = new SettingsSet(sundaycolor,todaycolor,everydaycolor,date_text_color,note_text_color,date_pattern,dayofweek_pattern,year_set);
                 System.out.println(set.toString());
                 //loader.saveSettings(set);
 
@@ -278,12 +280,22 @@ public class MainActivity extends AppCompatActivity {
         return everydaycolor;
     }
 
+    public static int getDate_text_color() {
+        return date_text_color;
+    }
+
+    public static int getNote_text_color() {
+        return note_text_color;
+    }
+
     public static void LoadSettings(SettingsSet set)
     {
         sundaycolor = set.getSundaycolor();
         todaycolor = set.getTodaycolor();
         everydaycolor = set.getEverydaycolor();
         date_pattern = set.getDate_pattern();
+        date_text_color = set.getDate_text_color();
+        note_text_color = set.getNote_text_color();
         dayofweek_pattern = set.getDayofweek_pattern();
         year_set = set.getSelected_year();
         selected_year.set(year_set,0,1);

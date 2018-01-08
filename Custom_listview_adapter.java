@@ -42,11 +42,12 @@ public class Custom_listview_adapter extends ArrayAdapter {
 
         if (entry != null) {
             TextView TvDate = (TextView) view.findViewById(R.id.list_row_date);
+            TvDate.setTextColor(MainActivity.getDate_text_color());
             TextView TvNote = (TextView) view.findViewById(R.id.list_row_note);
+            TvNote.setTextColor(MainActivity.getNote_text_color());
 
             if (TvDate != null) {
                 TvDate.setText(MainActivity.getDisplayDate(MainActivity.getDate_pattern()+MainActivity.getDayofweek_pattern(),MainActivity.getCalendarFromFile(entry.getDate())));
-
                 view = getColoredView(TvDate.getText().toString(),view);
             }
 
