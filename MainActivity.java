@@ -73,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initialize_buttons() {
-        bt_today.setText(">>> GO TODAY "+this.getDisplayDate(date_pattern,current_date)+"  <<<");
+
+        bt_today.setText(" >>> "+this.getDisplayDate(date_pattern,current_date)+" <<< ");
         bt_today.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -158,6 +158,7 @@ public class SettActivity extends AppCompatActivity {
         this.notetext_bar = (View)findViewById(R.id.note_text_bar);
 
         this.year_sel_spinner = (Spinner)findViewById(R.id.year_sel_spinner);
+        year_sel_spinner.setOnItemSelectedListener(spinners_listener);
 
         initialize_spinners_values();
         initialize_spinners();
@@ -176,8 +177,8 @@ public class SettActivity extends AppCompatActivity {
         date_formats.add("dd MMMM yyyy");
 
         day_name_formats = new ArrayList<String>();
-        day_name_formats.add("short names");
-        day_name_formats.add("long names");
+        day_name_formats.add(getResources().getString(R.string.short_day_names));
+        day_name_formats.add(getResources().getString(R.string.long_day_names));
 
         yearslist = new ArrayList<String>();
         for(int i=2018;i<2101;i++)
@@ -260,7 +261,7 @@ public class SettActivity extends AppCompatActivity {
         if (dayformat.equalsIgnoreCase(" EEE"))
         {
             for (int i = 0; i < day_name_formats.size(); i++) {
-                if (day_name_formats.get(i).equalsIgnoreCase("short names")) {
+                if (day_name_formats.get(i).equalsIgnoreCase(getResources().getString(R.string.short_day_names))) {
                     position = i;
                 }
             }
@@ -268,7 +269,7 @@ public class SettActivity extends AppCompatActivity {
         if (dayformat.equalsIgnoreCase(" EEEE"))
         {
             for (int i = 0; i < day_name_formats.size(); i++) {
-                if (day_name_formats.get(i).equalsIgnoreCase("long names")) {
+                if (day_name_formats.get(i).equalsIgnoreCase(getResources().getString(R.string.long_day_names))) {
                     position = i;
                 }
             }
@@ -342,11 +343,13 @@ public class SettActivity extends AppCompatActivity {
     {
         //set settings file day name format depending on selected value
         String daynameformat = day_name_spinner.getSelectedItem().toString();
-        if(daynameformat.matches("long names"))
+        String longnames = getContext().getResources().getString(R.string.long_day_names);
+        String shortnames = getContext().getResources().getString(R.string.short_day_names);
+        if(daynameformat.equalsIgnoreCase(longnames))
         {
             set.setDayofweek_pattern(" EEEE");
         }
-        if(daynameformat.matches("short names"))
+        if(daynameformat.equalsIgnoreCase(shortnames))
         {
             set.setDayofweek_pattern(" EEE");
         }
@@ -367,17 +370,17 @@ public class SettActivity extends AppCompatActivity {
 
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Toast.makeText(settings_context, "landscape", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(settings_context, "landscape", Toast.LENGTH_SHORT).show();
             SettActivity.setSundayColorPreview(set.getSundaycolor());
             SettActivity.setTodayColorPreview(set.getTodaycolor());
             SettActivity.setEverydayColorPreview(set.getEverydaycolor());
-            System.out.println("LANDSCAPE");
+
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            Toast.makeText(settings_context, "portrait", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(settings_context, "portrait", Toast.LENGTH_SHORT).show();
             SettActivity.setSundayColorPreview(set.getSundaycolor());
             SettActivity.setTodayColorPreview(set.getTodaycolor());
             SettActivity.setEverydayColorPreview(set.getEverydaycolor());
-            System.out.println("PORTRAIT");
+
         }
     }
 

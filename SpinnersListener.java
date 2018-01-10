@@ -2,6 +2,7 @@ package com.example.rbk.notatnik.git;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
@@ -18,6 +19,8 @@ import com.example.rbk.notatnik.R;
 public class SpinnersListener implements AdapterView.OnItemSelectedListener {
 
 
+
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
 
@@ -27,16 +30,22 @@ public class SpinnersListener implements AdapterView.OnItemSelectedListener {
             Spinner spinner;
             switch (adapterView.getId()) {
 
+
                 case R.id.date_spinner:
-                    Toast.makeText(SettActivity.getContext(), "DATE FORMAT " + adapterView.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show();
+                    String dateformat = view.getContext().getResources().getString(R.string.date_format_caption);
+                    Toast.makeText(SettActivity.getContext(), dateformat +": "+ adapterView.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show();
                     break;
 
                 case R.id.day_name_spinner:
-                    Toast.makeText(SettActivity.getContext(), "DAY NAME FORMAT " + adapterView.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show();
+                    String dayformat = view.getContext().getResources().getString(R.string.day_name_format_caption);
+                    Toast.makeText(SettActivity.getContext(), dayformat +": "+ adapterView.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show();
                     break;
 
                 case R.id.year_sel_spinner:
-                    Toast.makeText(SettActivity.getContext(), "SELECTED YEAR " + adapterView.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show();
+                    String selectedyear = view.getContext().getResources().getString(R.string.selected_year_text);
+
+                    Toast.makeText(SettActivity.getContext(), selectedyear +": "+ adapterView.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show();
+
                     break;
 
             }

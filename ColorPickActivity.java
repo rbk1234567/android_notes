@@ -146,13 +146,13 @@ public class ColorPickActivity extends AppCompatActivity {
 
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Toast.makeText(context, "landscape", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "landscape", Toast.LENGTH_SHORT).show();
 
-            System.out.println("LANDSCAPE");
+
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            Toast.makeText(context, "portrait", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "portrait", Toast.LENGTH_SHORT).show();
 
-            System.out.println("PORTRAIT");
+
         }
     }
 }
