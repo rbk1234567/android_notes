@@ -2,6 +2,8 @@ package com.example.rbk.notatnik.git;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,6 +13,8 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -140,4 +144,30 @@ public class EditActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            //Toast.makeText(settings_context, "landscape", Toast.LENGTH_SHORT).show();
+            refreshEditTextView();
+
+
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            //Toast.makeText(settings_context, "portrait", Toast.LENGTH_SHORT).show();
+            refreshEditTextView();
+
+        }
+    }
+
+    private void refreshEditTextView()
+    {
+        editText.invalidate();
+        ConstraintLayout clay = (ConstraintLayout)findViewById(R.id.constraintlayout);
+        clay.invalidate();
+    }
+
+
 }

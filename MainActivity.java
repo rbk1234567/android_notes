@@ -31,11 +31,11 @@ public class MainActivity extends AppCompatActivity {
     private static Calendar selected_year;
     private static String date_pattern = "dd/MM/yyyy";
     private static String dayofweek_pattern = " EEEE";
-    private static int sundaycolor = Color.parseColor("#ff0000");
-    private static int todaycolor = Color.parseColor("#0000ff");
-    private static int everydaycolor = Color.parseColor("#000000");
-    private static int date_text_color = Color.parseColor("#ffffff");
-    private static int note_text_color = Color.parseColor("#eeeeee");
+    private static int sundaycolor = Color.parseColor("#f04800");
+    private static int todaycolor = Color.parseColor("#691f00");
+    private static int everydaycolor = Color.parseColor("#360700");
+    private static int date_text_color = Color.parseColor("#ffeeaa");
+    private static int note_text_color = Color.parseColor("#eeff99");
     private static int year_set = 2018;
     private static ArrayList<List_entry> database = new ArrayList<List_entry>();
     private static ArrayList<List_entry> list_values = new ArrayList<List_entry>();
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initialize_buttons() {
 
-        bt_today.setText(" >>> "+this.getDisplayDate(date_pattern,current_date)+" <<< ");
+        bt_today.setText(" >>> "+getResources().getString(R.string.button_today_caption)+" ("+this.getDisplayDate(date_pattern,current_date)+") <<< ");
         bt_today.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

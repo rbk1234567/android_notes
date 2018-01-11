@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.rbk.notatnik.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class SettActivity extends AppCompatActivity {
 
@@ -38,6 +39,8 @@ public class SettActivity extends AppCompatActivity {
     static Button bt_everyday_pick;
     static Button bt_date_text_color_pick;
     static Button bt_note_text_color_pick;
+    static Calendar date_example = Calendar.getInstance();
+
 
     static ArrayList<String> day_name_formats;
     static ArrayList<String> date_formats;
@@ -58,7 +61,7 @@ public class SettActivity extends AppCompatActivity {
         settings_context = this.getApplicationContext();
         userIsInteracting= false;
         set = new DataLoader().getSettings();
-
+        date_example.set(2018,00,01);
         savesettings_button = (ImageButton)findViewById(R.id.bt_save_settings);
         savesettings_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,11 +173,12 @@ public class SettActivity extends AppCompatActivity {
     {
 
         date_formats = new ArrayList<String>();
-        date_formats.add("dd/MM/yyyy");
-        date_formats.add("dd.MM.yyyy");
-        date_formats.add("dd-MM-yyyy");
-        date_formats.add("dd MMM yyyy");
-        date_formats.add("dd MMMM yyyy");
+
+        date_formats.add(MainActivity.getDisplayDate("dd/MM/yyyy",date_example));
+        date_formats.add(MainActivity.getDisplayDate("dd-MM-yyyy",date_example));
+        date_formats.add(MainActivity.getDisplayDate("dd.MM.yyyy",date_example));
+        date_formats.add(MainActivity.getDisplayDate("dd MMM yyyy",date_example));
+        date_formats.add(MainActivity.getDisplayDate("dd MMMM yyyy",date_example));
 
         day_name_formats = new ArrayList<String>();
         day_name_formats.add(getResources().getString(R.string.short_day_names));
@@ -243,10 +247,11 @@ public class SettActivity extends AppCompatActivity {
     private int getPositionOfDateFormat(String dateformat)
     //set the initial spinner value for date format
     {
+
         int position=0;
         for(int i = 0; i< date_formats.size(); i++)
         {
-            if(date_formats.get(i).equalsIgnoreCase(dateformat.toString()))
+            if(date_formats.get(i).equalsIgnoreCase(MainActivity.getDisplayDate(dateformat.toString(),date_example)))
             {
                 position = i;
             }
@@ -335,7 +340,31 @@ public class SettActivity extends AppCompatActivity {
 
     public static void setDateFormat()
     {   //set settings file date format depending on selected value
-        set.setDate_pattern(date_spinner.getSelectedItem().toString());
+        //set.setDate_pattern(date_spinner.getSelectedItem().toString());
+        String selected = date_spinner.getSelectedItem().toString();
+
+        ArrayList<String> posibble_formats = new ArrayList<String>();
+        posibble_formats.add("dd/MM/yyyy");
+        posibble_formats.add("dd-MM-yyyy");
+        posibble_formats.add("dd.MM.yyyy");
+        posibble_formats.add("dd MMM yyyy");
+        posibble_formats.add("dd MMMM yyyy");
+
+        for (String s:
+             posibble_formats) {
+            String formatted_sel = MainActivity.getDisplayDate(s.toString(),date_example);
+
+            if(formatted_sel.equalsIgnoreCase(selected))
+            {
+                set.setDate_pattern(s.toString());
+                break;
+            }
+            else
+            {
+                set.setDate_pattern(posibble_formats.get(0));
+            }
+        }
+
     }
 
 
